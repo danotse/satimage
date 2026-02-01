@@ -2,6 +2,10 @@ import React, { useState } from 'react';
 import TerrainViewer from './TerrainViewer';
 import './App.css';
 
+// Import sample assets
+import sampleTerrainPath from './assets/sample_terrain.png';
+import sampleMaskPath from './assets/sample_mask.png';
+
 function App() {
   const [imageSrc, setImageSrc] = useState(null);
   const [imageName, setImageName] = useState("");
@@ -33,86 +37,57 @@ function App() {
     }
   };
 
-  // UI Components helpers
-  const ButtonStyle = {
-    background: 'white',
-    color: 'black',
-    padding: '8px 16px',
-    borderRadius: '20px',
-    cursor: 'pointer',
-    fontSize: '0.85rem',
-    fontWeight: '600',
-    border: 'none',
-    boxShadow: '0 2px 5px rgba(0,0,0,0.2)',
-    display: 'flex',
-    alignItems: 'center',
-    gap: '6px'
+  const handleLoadSample = () => {
+    setImageSrc(sampleTerrainPath);
+    setImageName("Sample Terrain");
+    setMaskSrc(sampleMaskPath);
+    setMaskName("Sample Irrigation");
+    setShowMask(true);
+    setMaskOpacity(0.6);
   };
 
   return (
-    <div style={{
-      width: '100vw',
-      height: '100vh',
-      display: 'flex',
-      flexDirection: 'column',
-      margin: 0,
-      padding: 0,
-      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
-      backgroundColor: '#050505',
-      color: '#ffffff',
-      userSelect: 'none'
-    }}>
+    <div className="app-container">
 
       {/* Floating Header */}
-      <div style={{
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        padding: '1.5rem',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        zIndex: 10,
-        pointerEvents: 'none'
-      }}>
+      <div className="header-overlay">
         {/* Title Block */}
-        <div style={{ pointerEvents: 'auto' }}>
-          <h1 style={{ margin: 0, fontSize: '1.4rem', fontWeight: '700', letterSpacing: '-0.03em' }}>
-            Satellite Terrain<span style={{ color: '#4dabf7' }}>.3D</span>
+        <div className="title-block">
+          <h1 className="app-title">
+            Satellite Terrain<span style={{ color: 'var(--accent-color)' }}>.3D</span>
           </h1>
-          <p style={{ margin: '4px 0 0 0', fontSize: '0.75rem', color: 'rgba(255,255,255,0.5)' }}>
+          <p className="app-subtitle">
             Irrigation Monitoring System
           </p>
         </div>
 
         {/* Top Controls */}
-        <div style={{ pointerEvents: 'auto', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '10px' }}>
+        <div className="controls-group">
 
           {/* Main Image Upload */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <div className="file-control">
             {imageName && (
-              <span style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.5)', background: 'rgba(0,0,0,0.5)', padding: '4px 8px', borderRadius: '4px' }}>
+              <span className="file-name">
                 {imageName}
               </span>
             )}
-            <label style={ButtonStyle}>
+            <label className="btn-upload">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
-              Base Map
+              Satellite Image
               <input type="file" accept="image/*" onChange={handleImageUpload} style={{ display: 'none' }} />
             </label>
           </div>
 
           {/* Mask Upload */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <div className="file-control">
             {maskName && (
-              <span style={{ fontSize: '0.8rem', color: '#4dabf7', background: 'rgba(0,123,255,0.1)', padding: '4px 8px', borderRadius: '4px' }}>
+              <span className="file-name highlight">
                 {maskName}
               </span>
             )}
-            <label style={{ ...ButtonStyle, background: '#333', color: 'white' }}>
+            <label className="btn-upload dark">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 8v8"></path><path d="M8 12h8"></path></svg>
-              Overlay Mask
+              Irrigation Data
               <input type="file" accept="image/*" onChange={handleMaskUpload} style={{ display: 'none' }} />
             </label>
           </div>
@@ -122,58 +97,26 @@ function App() {
 
       {/* Floating Sidebar for Overlay Controls (Only visible if mask loaded) */}
       {maskSrc && (
-        <div style={{
-          position: 'absolute',
-          top: '50%',
-          right: '20px',
-          transform: 'translateY(-50%)',
-          width: '240px',
-          background: 'rgba(20, 20, 20, 0.85)',
-          backdropFilter: 'blur(12px)',
-          borderRadius: '16px',
-          padding: '20px',
-          border: '1px solid rgba(255,255,255,0.1)',
-          zIndex: 20,
-          boxShadow: '0 10px 30px rgba(0,0,0,0.4)',
-          pointerEvents: 'auto'
-        }}>
-          <h3 style={{ margin: '0 0 15px 0', fontSize: '0.9rem', fontWeight: '600', color: '#ccc', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+        <div className="sidebar">
+          <h3 className="sidebar-title">
             Layer Options
           </h3>
 
           {/* Toggle */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-            <span style={{ fontSize: '0.9rem' }}>Segmentation</span>
+          <div className="sidebar-row">
+            <span style={{ fontSize: '0.9rem' }}>Highlight Fields</span>
             <div
+              className={`toggle-switch ${showMask ? 'active' : ''}`}
               onClick={() => setShowMask(!showMask)}
-              style={{
-                width: '40px',
-                height: '22px',
-                background: showMask ? '#4dabf7' : '#444',
-                borderRadius: '20px',
-                position: 'relative',
-                cursor: 'pointer',
-                transition: 'background 0.3s'
-              }}
             >
-              <div style={{
-                width: '18px',
-                height: '18px',
-                background: 'white',
-                borderRadius: '50%',
-                position: 'absolute',
-                top: '2px',
-                left: showMask ? '20px' : '2px',
-                transition: 'left 0.3s',
-                boxShadow: '0 1px 3px rgba(0,0,0,0.3)'
-              }} />
+              <div className="toggle-knob" />
             </div>
           </div>
 
           {/* Opacity Slider */}
-          <div style={{ marginBottom: '10px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', fontSize: '0.8rem', color: '#888' }}>
-              <span>Opacity</span>
+          <div className="slider-group">
+            <div className="slider-header">
+              <span>Visibility</span>
               <span>{Math.round(maskOpacity * 100)}%</span>
             </div>
             <input
@@ -183,23 +126,14 @@ function App() {
               step="0.01"
               value={maskOpacity}
               onChange={(e) => setMaskOpacity(parseFloat(e.target.value))}
-              style={{
-                width: '100%',
-                cursor: 'grab',
-                accentColor: '#4dabf7'
-              }}
+              className="opacity-slider"
             />
           </div>
         </div>
       )}
 
       {/* Main Content */}
-      <div style={{
-        flexGrow: 1,
-        position: 'relative',
-        background: '#000',
-        overflow: 'hidden'
-      }}>
+      <div className="viewer-container">
         {imageSrc ? (
           <TerrainViewer
             imageSrc={imageSrc}
@@ -208,22 +142,24 @@ function App() {
             maskOpacity={maskOpacity}
           />
         ) : (
-          <div style={{
-            height: '100%',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            opacity: 0.4
-          }}>
-            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" style={{ marginBottom: '20px' }}>
-              <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
-              <line x1="8" y1="21" x2="16" y2="21"></line>
-              <line x1="12" y1="17" x2="12" y2="21"></line>
-            </svg>
-            <p style={{ fontSize: '1rem', fontWeight: '400' }}>
-              No Data Loaded
+          <div className="empty-state">
+            <div className="empty-icon">
+              <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                <line x1="8" y1="21" x2="16" y2="21"></line>
+                <line x1="12" y1="17" x2="12" y2="21"></line>
+              </svg>
+            </div>
+            <p className="empty-text">
+              Ready to Visualize
             </p>
+            <p style={{ fontSize: '0.9rem', color: '#888', maxWidth: '300px', margin: '0 0 20px 0' }}>
+              Upload your own satellite imagery or load a sample to see how it works.
+            </p>
+            
+            <button className="btn-sample" onClick={handleLoadSample}>
+              Load Sample Data
+            </button>
           </div>
         )}
       </div>
